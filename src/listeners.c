@@ -56,7 +56,18 @@ void registry_global(void *data, struct wl_registry *wl_registry, uint32_t name,
 void registry_global_remove(void *data, struct wl_registry *wl_registry, uint32_t name) { LOG_WARN("Unimplemented"); }
 
 // shm impl
-void shm_format(void *data, struct wl_shm *wl_shm, uint32_t format) { LOG_WARN("Unimplemented"); }
+void shm_format(void *data, struct wl_shm *wl_shm, uint32_t format) {
+  if (data == NULL) {
+    LOG_ERR("data is null, should be we_app*");
+    return;
+  }
+  we_app *app = data;
+
+  if (format == WL_SHM_FORMAT_ARGB8888) {
+    LOG_INFO("ARGB8888 support");
+    app->argb8888_support = true;
+  }
+}
 
 // seat impl
 void seat_capabilities(void *data, struct wl_seat *wl_seat, uint32_t capabilities) { LOG_WARN("Unimplemented"); }

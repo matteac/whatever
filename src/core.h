@@ -31,6 +31,7 @@ typedef struct we_app {
 
   struct wl_keyboard *kbd;
 
+  bool argb8888_support;
   bool running;
 } we_app;
 

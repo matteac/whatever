@@ -4,7 +4,7 @@
 bool we_app_init(we_app *app) {
   assert(app != NULL);
 
-  // TODO(matt): WAYLAND_DISPLAY env var
+  // NOTE(matt): WAYLAND_DISPLAY is handled by libwayland-client
   app->display = wl_display_connect(NULL);
   assert(app->display != NULL);
 
@@ -21,6 +21,11 @@ bool we_app_init(we_app *app) {
 
   wl_shm_add_listener(app->shm, &shm_listener, app);
   wl_seat_add_listener(app->seat, &seat_listener, app);
+
+  wl_display_roundtrip(app->display);
+
+  // NOTE(matt): maybe check for xrgb as fallback, but argb should be quite ubiquitous
+  assert(app->argb8888_support == true);
 
   return true;
 }
@@ -53,8 +58,15 @@ bool we_app_deinit(we_app *app) {
 }
 
 void we_app_run(we_app *app) {
+  assert(app != NULL);
+
   app->running = true;
-  while (wl_display_dispatch(app->display) != -1) {
+  while (app->running) {
+    int32_t dispatched = wl_display_dispatch(app->display);
+    if (dispatched < 0) {
+      LOG_ERR("dispatch error: %d", dispatched);
+      app->running = false;
+    }
   }
 }
 
@@ -98,6 +110,5 @@ bool we_window_deinit(we_window *win) {
     wl_surface_destroy(win->surface);
 
   memset(win, 0, sizeof(we_window));
-
   return true;
 }
