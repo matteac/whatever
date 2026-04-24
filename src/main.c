@@ -1,6 +1,7 @@
 #include "core.h"
 
 void render(void *a, we_window *win) {
+  (void)a;
   uint32_t *pixels = win->shm_data;
   for (uint32_t x = 0; x <= win->width; x++) {
     for (uint32_t y = 0; y <= win->height; y++) {
@@ -9,7 +10,7 @@ void render(void *a, we_window *win) {
   }
 }
 
-int main() {
+int main(void) {
   we_app app = {0};
   we_window win = {0};
 
