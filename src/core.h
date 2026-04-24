@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/mman.h>
+#include <unistd.h>
 #include <wayland-client.h>
 
 #include "wlr-layer-shell/wlr-layer-shell.h"

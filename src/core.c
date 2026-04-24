@@ -112,3 +112,14 @@ bool we_window_deinit(we_window *win) {
   memset(win, 0, sizeof(we_window));
   return true;
 }
+
+void we_window_set_render(we_window *win, we_render_callback cb, void *data) {
+  assert(win != NULL);
+  win->render_callback = cb;
+  win->render_data = data;
+}
+void we_window_set_update(we_window *win, we_update_callback cb, void *data) {
+  assert(win != NULL);
+  win->update_callback = cb;
+  win->update_data = data;
+}
