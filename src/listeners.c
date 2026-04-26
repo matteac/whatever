@@ -197,6 +197,13 @@ void layer_surface_configure(void *data, struct zwlr_layer_surface_v1 *layer_sur
     }
   }
 
+  if (!win->renderer) {
+    win->renderer = we_renderer_create(win);
+    if (win->renderer == NULL) {
+      LOG_ERR("Error creating renderer");
+    }
+  }
+
   struct wl_callback *frame_callback = wl_surface_frame(win->surface);
   wl_callback_add_listener(frame_callback, &frame_callback_listener, win);
 
@@ -228,7 +235,7 @@ void frame_callback_done(void *data, struct wl_callback *callback, uint32_t call
   // }
 
   if (win->render_callback != NULL) {
-    win->render_callback(win->render_data, win);
+    win->render_callback(win->render_data, win, win->renderer);
   }
 
   wl_callback_destroy(callback);

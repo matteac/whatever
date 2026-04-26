@@ -12,12 +12,13 @@
 #include "wlr-layer-shell/wlr-layer-shell.h"
 
 #include "log.h"
+#include "renderer.h"
 
 struct we_app;
 struct we_window;
 
 typedef void (*we_update_callback)(void *update_data, struct we_window *win);
-typedef void (*we_render_callback)(void *render_data, struct we_window *win);
+typedef void (*we_render_callback)(void *render_data, struct we_window *win, struct we_renderer *renderer);
 
 typedef struct we_app {
   struct we_window *win;
@@ -53,6 +54,8 @@ typedef struct we_window {
   struct wl_buffer *buffer;
   void *shm_data;
   size_t shm_size;
+
+  we_renderer *renderer;
 
   we_update_callback update_callback;
   void *update_data;
