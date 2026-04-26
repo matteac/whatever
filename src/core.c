@@ -1,5 +1,5 @@
 #include "core.h"
-#include "listeners.c"
+#include "listeners.h"
 
 bool we_app_init(we_app *app) {
   assert(app != NULL);

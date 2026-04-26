@@ -1,12 +1,26 @@
 default: build
 
-xdg:
-    cc -c protocols/xdg-shell/xdg-shell.c -o build/obj/xdg-shell.o
-wlr:
-    cc -c protocols/wlr-layer-shell/wlr-layer-shell.c -o build/obj/wlr-layer-shell.o
+CC := "cc"
+CC_DEFS  := "-D_GNU_SOURCE"
+CC_FLAGS := "-Wall -Wextra -Wpedantic"
+CC_INCLS := "-Isrc -Iprotocols"
+CC_LIBS  := "-lwayland-client -lcairo"
 
-build: wlr xdg
-    cc src/main.c src/core.c src/renderer_cairo.c build/obj/*.o -o build/main -D_GNU_SOURCE -Isrc -Iprotocols -lwayland-client -lcairo -Wall -Wextra -Wpedantic
+BUILD := "build"
+OBJS  := f'{{BUILD}}/objs'
+
+pre:
+    @mkdir -p {{BUILD}}
+obj_pre:
+    @mkdir -p {{OBJS}}
+
+xdg: obj_pre
+    {{CC}} -c protocols/xdg-shell/*.c -o {{OBJS}}/xdg-shell.o
+wlr: obj_pre
+    {{CC}} -c protocols/wlr-layer-shell/*.c -o {{OBJS}}/wlr-layer-shell.o
+
+build: pre wlr xdg
+    {{CC}} src/*.c -o {{BUILD}}/main {{OBJS}}/*.o {{CC_DEFS}} {{CC_INCLS}} {{CC_LIBS}} {{CC_FLAGS}}
 
 run: build
-    build/main
+    {{BUILD}}/main
