@@ -1,6 +1,6 @@
 default: build
 
-CC := "cc"
+CC := env_var_or_default("CC", "cc")
 CC_DEFS  := "-D_GNU_SOURCE"
 CC_FLAGS := "-Wall -Wextra -Wpedantic"
 CC_INCLS := "-Isrc -Iprotocols"
