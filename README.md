@@ -2,26 +2,35 @@
 
 > **Under development**
 
+Minimal Wayland App Launcher.
+
 ## Build from source
 
-To build this project from source, you need:
+### Requirements
 
-- `wayland` dev libraries
-- `cairo` dev libraries
-- A C compiler
-- Optionally, `just` if you want to use the `justfile`
+* C compiler (`cc`, `clang`, etc.)
+* Development packages:
+  * `wayland-client`
+  * `cairo`
+  * `freetype2`
+  * `harfbuzz`
 
-### justfile
-You can build the project using the included `justfile`:
+> Package names may vary depending on your distribution.
+
+---
+
+### Using `just` (recommended)
 ```sh
-just build # you can set your C compiler by setting the CC env var
-# CC="clang" just build
+just build
+# CC=clang just build
 ```
 
-### build.sh
-Or using any POSIX shell with `build.sh`:
+---
+
+### Using `build.sh`
 ```sh
-sh build.sh # you can set your C compiler by setting the CC env var
-# CC="clang" sh build.sh
+sh build.sh
+# CC=clang sh build.sh
 ```
-> NOTE: `build.sh` may be outdated compared to `justfile`
+> `justfile` is the primary build definition. `build.sh` may lag behind.
+
