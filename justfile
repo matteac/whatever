@@ -2,25 +2,29 @@ default: build
 
 CC := env_var_or_default("CC", "cc")
 CC_DEFS  := "-D_GNU_SOURCE"
-CC_FLAGS := "-Wall -Wextra -Wpedantic"
-CC_INCLS := "-Isrc -Iprotocols"
-CC_LIBS  := "-lwayland-client -lcairo"
+CC_FLAGS := "-std=c23 -Wall -Wextra -Wpedantic -O0 -g -ggdb"
+CC_INCLS := "-Isrc -Iprotocols -I/usr/include/freetype2"
+CC_LIBS  := "-lwayland-client -lm -lcairo -lfreetype -lharfbuzz"
 
 BUILD := "build"
 OBJS  := f'{{BUILD}}/objs'
 
-pre:
+_pre:
     @mkdir -p {{BUILD}}
-obj_pre:
+_obj_pre:
     @mkdir -p {{OBJS}}
 
-xdg: obj_pre
+_xdg: _obj_pre
     {{CC}} -c protocols/xdg-shell/*.c -o {{OBJS}}/xdg-shell.o
-wlr: obj_pre
+_wlr: _obj_pre
     {{CC}} -c protocols/wlr-layer-shell/*.c -o {{OBJS}}/wlr-layer-shell.o
 
-build: pre wlr xdg
-    {{CC}} src/*.c -o {{BUILD}}/main {{OBJS}}/*.o {{CC_DEFS}} {{CC_INCLS}} {{CC_LIBS}} {{CC_FLAGS}}
-
+build: _pre _wlr _xdg
+    {{CC}} src/*.c -o {{BUILD}}/whatever {{OBJS}}/*.o {{CC_DEFS}} {{CC_INCLS}} {{CC_LIBS}} {{CC_FLAGS}}
 run: build
-    {{BUILD}}/main
+    {{BUILD}}/whatever
+
+build_profile: _pre _wlr _xdg
+    {{CC}} src/*.c -o {{BUILD}}/whatever {{OBJS}}/*.o -DPROFILE {{CC_DEFS}} {{CC_INCLS}} {{CC_LIBS}} {{CC_FLAGS}}
+profile: build_profile
+    {{BUILD}}/whatever

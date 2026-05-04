@@ -197,13 +197,6 @@ void frame_callback_done(void *data, struct wl_callback *callback, uint32_t call
 
   we_window *win = data;
 
-  // uint32_t *pixels = win->shm_data;
-  // for (uint32_t x = 0; x <= win->width; x++) {
-  //   for (uint32_t y = 0; y <= win->height; y++) {
-  //     pixels[y * win->width + x] = 0xf0141414;
-  //   }
-  // }
-
   if (win->render_callback != NULL) {
     win->render_callback(win->render_data, win, win->renderer);
   }

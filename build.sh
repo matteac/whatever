@@ -3,9 +3,9 @@ set -eu
 
 : "${CC:=cc}"
 CC_DEFS="-D_GNU_SOURCE"
-CC_FLAGS="-Wall -Wextra -Wpedantic"
-CC_INCLS="-Isrc -Iprotocols"
-CC_LIBS="-lwayland-client -lcairo"
+CC_FLAGS="-std=c23 -Wall -Wextra -Wpedantic -O0 -g -ggdb"
+CC_INCLS="-Isrc -Iprotocols -I/usr/include/freetype2"
+CC_LIBS="-lwayland-client -lm -lcairo -lfreetype -lharfbuzz"
 
 BUILD="build"
 OBJS="$BUILD/objs"
@@ -32,21 +32,51 @@ build() {
     _pre
     _wlr
     _xdg
-    $CC src/*.c -o "$BUILD/main" "$OBJS"/*.o \
+    $CC src/*.c -o "$BUILD/whatever" "$OBJS"/*.o \
         $CC_DEFS $CC_INCLS $CC_LIBS $CC_FLAGS
 }
 
 run() {
     build
-    exec "$BUILD/main"
+    exec "$BUILD/whatever"
 }
 
-set -xeu
+
+build_profile() {
+    _pre
+    _wlr
+    _xdg
+    $CC src/*.c "$OBJS"/*.o \
+        -o "$BUILD/whatever" \
+        -DPROFILE \
+        $CC_DEFS $CC_INCLS $CC_LIBS $CC_FLAGS
+}
+
+profile() {
+    build_profile
+    exec "$BUILD/whatever"
+}
+
+
 case "${1:-build}" in
-    build) build ;;
-    run) run ;;
+    build)
+      set -xeu
+      build
+    ;;
+    run)
+      set -xeu
+      run
+    ;;
+    build_profile)
+      set -xeu
+      build_profile
+    ;;
+    profile)
+      set -xeu
+      profile
+    ;;
     *)
-        echo "Usage: $0 {build|run}" >&2
-        exit 1
-        ;;
+      echo "Usage: $0 {build|run|build_profile|profile}" >&2
+      exit 1
+    ;;
 esac

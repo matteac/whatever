@@ -34,7 +34,8 @@ typedef struct we_image {
 
 typedef struct we_font we_font;
 
-we_font *we_font_load(const char *name, uint32_t size, bool italic);
+we_font *we_font_load(const char *name, uint32_t size);
+we_font *we_font_load_from_memory(const unsigned char *data, size_t data_size, uint32_t size);
 void we_font_destroy(we_font *font);
 
 typedef struct we_renderer we_renderer;

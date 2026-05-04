@@ -14,3 +14,9 @@
 
 #define LOG_WARN(fmt, ...) LOG(stderr, "\x1b[33mWARN\x1b[0m", fmt, ##__VA_ARGS__)
 #define LOG_ERR(fmt, ...) LOG(stderr, "\x1b[35mERROR\x1b[0m", fmt, ##__VA_ARGS__)
+
+#ifdef PROFILE
+#define LOG_PROF(fmt, ...) LOG(stderr, "\x1b[35mPROF\x1b[0m", fmt, ##__VA_ARGS__)
+#else
+#define LOG_PROF(fmt, ...) ((void)0)
+#endif
